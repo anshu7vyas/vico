@@ -30,6 +30,7 @@ import com.patrykandpatrick.vico.compose.cartesian.axis.rememberBottom
 import com.patrykandpatrick.vico.compose.cartesian.axis.rememberStart
 import com.patrykandpatrick.vico.compose.cartesian.layer.rememberLine
 import com.patrykandpatrick.vico.compose.cartesian.layer.rememberLineCartesianLayer
+import com.patrykandpatrick.vico.compose.cartesian.layer.dashed
 import com.patrykandpatrick.vico.compose.cartesian.rememberCartesianChart
 import com.patrykandpatrick.vico.compose.cartesian.rememberFadingEdges
 import com.patrykandpatrick.vico.compose.cartesian.rememberVicoZoomState
@@ -88,7 +89,8 @@ private fun ComposeChart3(modelProducer: CartesianChartModelProducer, modifier: 
           lineProvider =
             LineCartesianLayer.LineProvider.series(
               LineCartesianLayer.rememberLine(
-                remember { LineCartesianLayer.LineFill.single(fill(lineColor)) }
+                fill = remember { LineCartesianLayer.LineFill.single(fill(lineColor)) },
+                pattern = remember { LineCartesianLayer.LinePattern.dashed() },
               )
             ),
           rangeProvider = rangeProvider,
@@ -134,7 +136,16 @@ private fun ViewChart3(modelProducer: CartesianChartModelProducer, modifier: Mod
 
   AndroidViewBinding(Chart3Binding::inflate, modifier) {
     with(chartView) {
-      (chart?.layers?.get(0) as LineCartesianLayer?)?.rangeProvider = rangeProvider
+      with(chart?.layers?.get(0) as LineCartesianLayer?) {
+        this?.rangeProvider = rangeProvider
+        this?.lineProvider =
+          LineCartesianLayer.LineProvider.series(
+            LineCartesianLayer.Line(
+              fill = LineCartesianLayer.LineFill.single(fill(lineColor)),
+              pattern = LineCartesianLayer.LinePattern.Dashed(),
+            )
+          )
+      }
       this.modelProducer = modelProducer
       chart?.marker = marker
     }
