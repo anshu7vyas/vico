@@ -28,9 +28,9 @@ import com.patrykandpatrick.vico.R
 import com.patrykandpatrick.vico.compose.cartesian.CartesianChartHost
 import com.patrykandpatrick.vico.compose.cartesian.axis.rememberBottom
 import com.patrykandpatrick.vico.compose.cartesian.axis.rememberStart
+import com.patrykandpatrick.vico.compose.cartesian.layer.dashed
 import com.patrykandpatrick.vico.compose.cartesian.layer.rememberLine
 import com.patrykandpatrick.vico.compose.cartesian.layer.rememberLineCartesianLayer
-import com.patrykandpatrick.vico.compose.cartesian.layer.dashed
 import com.patrykandpatrick.vico.compose.cartesian.rememberCartesianChart
 import com.patrykandpatrick.vico.compose.cartesian.rememberFadingEdges
 import com.patrykandpatrick.vico.compose.cartesian.rememberVicoZoomState
@@ -84,46 +84,55 @@ internal fun Chart3(uiFramework: UIFramework, modifier: Modifier) {
 private fun ComposeChart3(modelProducer: CartesianChartModelProducer, modifier: Modifier) {
   CartesianChartHost(
     chart =
-      rememberCartesianChart(
-        rememberLineCartesianLayer(
-          lineProvider =
-            LineCartesianLayer.LineProvider.series(
-              LineCartesianLayer.rememberLine(
-                fill = remember { LineCartesianLayer.LineFill.single(fill(lineColor)) },
-                pattern = remember { LineCartesianLayer.LinePattern.dashed() },
-              )
-            ),
-          rangeProvider = rangeProvider,
+    rememberCartesianChart(
+      rememberLineCartesianLayer(
+        lineProvider =
+        LineCartesianLayer.LineProvider.series(
+          LineCartesianLayer.rememberLine(
+            fill =
+            remember {
+              LineCartesianLayer.LineFill.single(fill(lineColor))
+            },
+            pattern = remember { LineCartesianLayer.LinePattern.dashed() },
+          )
         ),
-        startAxis =
-          VerticalAxis.rememberStart(
-            guideline = null,
-            horizontalLabelPosition = VerticalAxis.HorizontalLabelPosition.Inside,
-            titleComponent =
-              rememberTextComponent(
-                color = Color.Black,
-                margins = dimensions(end = 4.dp),
-                padding = dimensions(8.dp, 2.dp),
-                background = rememberShapeComponent(lineColor, CorneredShape.Pill),
-              ),
-            title = stringResource(R.string.y_axis),
-          ),
-        bottomAxis =
-          HorizontalAxis.rememberBottom(
-            itemPlacer =
-              remember { HorizontalAxis.ItemPlacer.aligned(addExtremeLabelPadding = false) },
-            titleComponent =
-              rememberTextComponent(
-                color = Color.White,
-                margins = dimensions(top = 4.dp),
-                padding = dimensions(8.dp, 2.dp),
-                background = shapeComponent(bottomAxisLabelBackgroundColor, CorneredShape.Pill),
-              ),
-            title = stringResource(R.string.x_axis),
-          ),
-        marker = rememberMarker(DefaultCartesianMarker.LabelPosition.AroundPoint),
-        fadingEdges = rememberFadingEdges(),
+        rangeProvider = rangeProvider,
       ),
+      startAxis =
+      VerticalAxis.rememberStart(
+        guideline = null,
+        horizontalLabelPosition = VerticalAxis.HorizontalLabelPosition.Inside,
+        titleComponent =
+        rememberTextComponent(
+          color = Color.Black,
+          margins = dimensions(end = 4.dp),
+          padding = dimensions(8.dp, 2.dp),
+          background = rememberShapeComponent(lineColor, CorneredShape.Pill),
+        ),
+        title = stringResource(R.string.y_axis),
+      ),
+      bottomAxis =
+      HorizontalAxis.rememberBottom(
+        itemPlacer =
+        remember {
+          HorizontalAxis.ItemPlacer.aligned(addExtremeLabelPadding = false)
+        },
+        titleComponent =
+        rememberTextComponent(
+          color = Color.White,
+          margins = dimensions(top = 4.dp),
+          padding = dimensions(8.dp, 2.dp),
+          background =
+          shapeComponent(
+            bottomAxisLabelBackgroundColor,
+            CorneredShape.Pill
+          ),
+        ),
+        title = stringResource(R.string.x_axis),
+      ),
+      marker = rememberMarker(DefaultCartesianMarker.LabelPosition.AroundPoint),
+      fadingEdges = rememberFadingEdges(),
+    ),
     modelProducer = modelProducer,
     modifier = modifier,
     zoomState = rememberVicoZoomState(zoomEnabled = false),
