@@ -122,6 +122,8 @@ public open class LineCartesianLayer(
         strokeCap = cap
       }
 
+    public val requiresFullLineLength: Boolean = pattern is LinePattern.Dashed
+
     /** Draws the line. */
     public fun draw(
       context: CartesianDrawingContext,
@@ -367,7 +369,12 @@ public open class LineCartesianLayer(
         val drawingStart =
           layerBounds.getStart(isLtr = isLtr) + drawingStartAlignmentCorrection - scroll
 
-        forEachPointInBounds(series, drawingStart, pointInfoMap) { _, x, y, _, _ ->
+        forEachPointInBounds(
+          series = series,
+          drawingStart = drawingStart,
+          pointInfoMap = pointInfoMap,
+          drawFullLineLength = line.requiresFullLineLength
+        ) { _, x, y, _, _ ->
           if (linePath.isEmpty) {
             linePath.moveTo(x, y)
           } else {
@@ -520,6 +527,7 @@ public open class LineCartesianLayer(
     series: List<LineCartesianLayerModel.Entry>,
     drawingStart: Float,
     pointInfoMap: Map<Double, LineCartesianLayerDrawingModel.PointInfo>?,
+    drawFullLineLength: Boolean = false,
     action:
       (
         entry: LineCartesianLayerModel.Entry, x: Float, y: Float, previousX: Float?, nextX: Float?,
@@ -555,6 +563,7 @@ public open class LineCartesianLayer(
       x = immutableX
       nextX = immutableNextX
       if (
+        drawFullLineLength.not() &&
         immutableNextX != null &&
           (isLtr && immutableX < boundsStart || !isLtr && immutableX > boundsStart) &&
           (isLtr && immutableNextX < boundsStart || !isLtr && immutableNextX > boundsStart)
